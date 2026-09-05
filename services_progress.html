@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>סדר בתואר 📚 – מעקב התקדמות</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── SVG Circular Progress Ring ── */
+    .progress-ring-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .progress-ring-svg {
+      transform: rotate(-90deg); /* Start arc from top */
+    }
+
+    .progress-ring-track {
+      fill: none;
+      stroke: var(--color-border);
+      stroke-width: 8;
+    }
+
+    .progress-ring-fill {
+      fill: none;
+      stroke: url(#progressGradient);
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.6s ease;
+    }
+
+    /* ── Motivational Message ── */
+    .motivational-msg {
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      padding: 0.75rem 1.25rem;
+      background-color: var(--color-surface);
+      border-radius: var(--radius-card);
+      border: 2px solid var(--color-border);
+      margin-bottom: 1.5rem;
+      transition: color var(--transition);
+    }
+
+    /* ── Weekly Progress Bar Card ── */
+    .weekly-progress-card {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      padding: 1.25rem;
+      border: 1px solid var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+
+    .weekly-progress-card .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .weekly-progress-card .progress-title {
+      font-weight: 700;
+      color: var(--color-text);
+      font-size: 1rem;
+    }
+
+    .weekly-progress-card .progress-count {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+
+    /* ── Archive List ── */
+    .archive-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .archive-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      background-color: var(--color-surface);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--color-border);
+      border-right: 4px solid var(--color-success);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .archive-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .archive-item .archive-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .archive-item .archive-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .archive-item .archive-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--color-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .archive-item .archive-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+      flex-wrap: wrap;
+    }
+
+    .archive-item .archive-date {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    /* Stats card with ring override */
+    .stats-card.ring-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Skip Navigation ── -->
+  <a class="skip-nav" href="#main-content">דלג לתוכן הראשי</a>
+
+  <!-- ── Site Header ── -->
+  <header class="site-header">
+    <a href="index.html" class="logo" aria-label="סדר בתואר – דף הבית">
+      סדר בתואר 📚
+    </a>
+    <div class="header-actions">
+      <button
+        id="dark-toggle"
+        class="dark-mode-toggle"
+        aria-label="עבור למצב כהה"
+        onclick="toggleTheme()"
+        type="button"
+      >🌙</button>
+    </div>
+  </header>
+
+  <!-- ── Navigation Bar ── -->
+  <nav class="nav" aria-label="ניווט ראשי">
+    <button
+      class="nav-toggle"
+      id="nav-toggle"
+      aria-expanded="false"
+      aria-controls="nav-links"
+      aria-label="פתח תפריט ניווט"
+      type="button"
+      onclick="toggleNav()"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="nav-links" id="nav-links" role="list">
+      <li>
+        <a href="index.html" class="nav-link">לוח בקרה</a>
+      </li>
+      <li>
+        <a href="add_task.html" class="nav-link">הוספת משימה</a>
+      </li>
+      <li>
+        <a href="services_ai.html" class="nav-link">תכנון AI</a>
+      </li>
+      <li>
+        <a href="services_progress.html"
+           class="nav-link active"
+           aria-current="page">התקדמות</a>
+      </li>
+      <li>
+        <a href="about.html" class="nav-link">אודות</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ── Main Content ── -->
+  <main id="main-content">
+    <div class="page-content">
+
+      <!-- Page Heading -->
+      <h1 style="font-size:1.8rem; color: var(--color-primary); margin-bottom: 1.5rem;">
+        מעקב התקדמות 📊
+      </h1>
+
+      <img
+        src="progress-chart.svg"
+        class="illustration illustration-center mb-3"
+        alt="איור בסגנון גיאומטרי של גרף עמודות עולה עם קו מגמה כלפי מעלה וסימן וי, המסמל התקדמות בהשלמת משימות"
+      />
+
+      <!-- ── Stats Row ── -->
+      <div class="stats-grid" role="region" aria-label="סטטיסטיקות שבועיות">
+
+        <!-- Card 1: Completed count (Requirement 8.1) -->
+        <div class="stats-card" aria-label="משימות שהושלמו השבוע">
+          <div class="stat-value" id="stat-completed">0</div>
+          <div class="stat-label">משימות הושלמו השבוע</div>
+        </div>
+
+        <!-- Card 2: Percentage with SVG circular ring (Requirement 8.2)
+             r=38, circumference = 2 * π * 38 ≈ 238.76 -->
+        <div class="stats-card ring-card" aria-label="אחוז השלמת משימות">
+          <div class="progress-ring-wrapper">
+            <svg
+              class="progress-ring-svg"
+              width="100"
+              height="100"
+              viewBox="0 0 100 100"
+              role="img"
+              aria-label="טבעת התקדמות"
+            >
+              <defs>
+                <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%"   stop-color="#9B8FD4" />
+                  <stop offset="100%" stop-color="#7EC8E3" />
+                </linearGradient>
+              </defs>
+              <!-- Track circle -->
+              <circle
+                class="progress-ring-track"
+                cx="50" cy="50" r="38"
+              />
+              <!-- Fill circle: stroke-dasharray = circumference ≈ 238.76 -->
+              <circle
+                class="progress-ring-fill"
+                id="progress-ring-circle"
+                cx="50" cy="50" r="38"
+                stroke-dasharray="238.76"
+                stroke-dashoffset="238.76"
+              />
+              <!-- Percentage text: counter-rotate since SVG is rotated -90deg -->
+              <text
+                x="50" y="54"
+                text-anchor="middle"
+                font-size="16"
+                font-weight="800"
+                transform="rotate(90, 50, 50)"
+                style="fill: var(--color-primary);"
+                id="ring-pct-text"
+                aria-hidden="true"
+              >0%</text>
+            </svg>
+          </div>
+          <div class="stat-label">אחוז השלמה</div>
+          <!-- Screen-reader accessible percentage announcement -->
+          <span class="sr-only" id="sr-pct-label" aria-live="polite">0 אחוזים</span>
+        </div>
+
+      </div><!-- /.stats-grid -->
+
+      <!-- ── Motivational Message (Requirements 8.1–8.2) ── -->
+      <div
+        class="motivational-msg"
+        id="motivational-msg"
+        role="status"
+        aria-live="polite"
+        aria-label="הודעת עידוד"
+      >
+        בואי נתחיל! 💪
+      </div>
+
+      <!-- ── Weekly Progress Bar (Requirement 8.1–8.2) ── -->
+      <div class="weekly-progress-card" aria-label="התקדמות שבועית">
+        <div class="progress-header">
+          <span class="progress-title">התקדמות שבועית</span>
+          <span
+            class="progress-count"
+            id="progress-count-label"
+            aria-live="polite"
+          >0 מתוך 0 משימות</span>
+        </div>
+        <div
+          class="progress-bar"
+          role="progressbar"
+          aria-valuenow="0"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="סרגל התקדמות שבועי"
+          id="weekly-progress-bar"
+        >
+          <div
+            class="progress-fill"
+            id="weekly-progress-fill"
+            style="width: 0%;"
+          ></div>
+        </div>
+      </div>
+
+      <!-- ── Archive Section (Requirements 7.2–7.3) ── -->
+      <section aria-labelledby="archive-heading">
+        <h2 class="section-title" id="archive-heading">משימות שהושלמו 📋</h2>
+
+        <div
+          id="archive-list"
+          class="archive-list"
+          role="list"
+          aria-live="polite"
+          aria-label="רשימת משימות שהושלמו"
+        >
+          <!-- Rendered by ProgressTracker.render() -->
+        </div>
+
+      </section>
+
+    </div><!-- /.page-content -->
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p>סדר בתואר 📚 &mdash; בנוי עם ❤️ עבור נעמה</p>
+  </footer>
+
+  <!-- ── Toast Container ── -->
+  <div class="toast-container" id="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- ── Shared JS ── -->
+  <script src="app.js"></script>
+
+  <!-- ── Inline Progress Tracker Script ── -->
+  <script>
+    'use strict';
+
+    // ── Course labels ──────────────────────────────────────────────────────
+    var COURSE_LABELS = {
+      web:     'מדעי האינטרנט',
+      ds:      'מדעי הנתונים',
+      algo:    'אלגוריתמים',
+      os:      'מערכות הפעלה',
+      project: 'פרויקט',
+      other:   'אחר'
+    };
+
+    // SVG ring circumference: 2 * π * r = 2 * Math.PI * 38 ≈ 238.76
+    var RING_CIRCUMFERENCE = 2 * Math.PI * 38; // ≈ 238.76
+
+    // ── ProgressTracker ────────────────────────────────────────────────────
+    var ProgressTracker = {
+
+      /**
+       * Check if the stored week key differs from the current ISO week.
+       * If a new week has begun, reset completed/total counters to 0.
+       * Requirement 8.4
+       */
+      checkWeekReset: function() {
+        try {
+          var currentWeek = getWeekKey(new Date());
+          var raw = localStorage.getItem('seder_week_progress');
+          if (!raw) return;
+          var progress = JSON.parse(raw);
+          if (progress && progress.weekKey !== currentWeek) {
+            var reset = { weekKey: currentWeek, completed: 0, total: 0 };
+            localStorage.setItem('seder_week_progress', JSON.stringify(reset));
+          }
+        } catch (e) {
+          console.error('ProgressTracker.checkWeekReset error:', e);
+        }
+      },
+
+      /**
+       * Read seder_week_progress from localStorage.
+       * Returns { weekKey, completed, total } or safe defaults.
+       * Requirements 8.1, 8.2
+       */
+      getWeekStats: function() {
+        try {
+          var raw = localStorage.getItem('seder_week_progress');
+          if (!raw) return { weekKey: getWeekKey(new Date()), completed: 0, total: 0 };
+          var parsed = JSON.parse(raw);
+          return {
+            weekKey:   parsed.weekKey   || getWeekKey(new Date()),
+            completed: typeof parsed.completed === 'number' ? parsed.completed : 0,
+            total:     typeof parsed.total     === 'number' ? parsed.total     : 0
+          };
+        } catch (e) {
+          console.error('ProgressTracker.getWeekStats error:', e);
+          return { weekKey: getWeekKey(new Date()), completed: 0, total: 0 };
+        }
+      },
+
+      /**
+       * Render the full progress page:
+       *  1. Completed count stat card
+       *  2. SVG circular progress ring showing floor(completed/total*100)%
+       *  3. Weekly progress bar with "X מתוך Y משימות" label
+       *  4. Motivational message based on percentage
+       *  5. Archive list of completed tasks
+       * Requirements 7.2, 7.3, 8.1–8.4
+       */
+      render: function() {
+        var stats     = this.getWeekStats();
+        var completed = stats.completed;
+        var total     = stats.total;
+
+        // floor(completed / total * 100), clamped to [0, 100]
+        var pct = (total > 0) ? Math.floor((completed / total) * 100) : 0;
+        pct = Math.min(100, Math.max(0, pct));
+
+        // ── 1. Completed count card ──────────────────────────────────────
+        var statEl = document.getElementById('stat-completed');
+        if (statEl) statEl.textContent = completed;
+
+        // ── 2. SVG Circular progress ring ───────────────────────────────
+        var ringCircle = document.getElementById('progress-ring-circle');
+        var ringText   = document.getElementById('ring-pct-text');
+        var srLabel    = document.getElementById('sr-pct-label');
+
+        if (ringCircle) {
+          var offset = RING_CIRCUMFERENCE - (pct / 100) * RING_CIRCUMFERENCE;
+          ringCircle.style.strokeDashoffset = offset;
+          // Special colouring: green at 100%
+          if (pct === 100) {
+            ringCircle.style.stroke = 'var(--color-success)';
+          } else {
+            ringCircle.style.stroke = ''; // revert to SVG gradient fill
+          }
+        }
+        if (ringText) ringText.textContent  = pct + '%';
+        if (srLabel)  srLabel.textContent   = pct + ' אחוזים';
+
+        // ── 3. Weekly progress bar ───────────────────────────────────────
+        var progressFill  = document.getElementById('weekly-progress-fill');
+        var progressBar   = document.getElementById('weekly-progress-bar');
+        var progressLabel = document.getElementById('progress-count-label');
+
+        if (progressFill) {
+          progressFill.style.width = pct + '%';
+          progressFill.classList.toggle('success', pct === 100);
+          progressFill.classList.toggle('danger',  pct > 0 && pct < 20);
+        }
+        if (progressBar) {
+          progressBar.setAttribute('aria-valuenow', pct);
+        }
+        if (progressLabel) {
+          progressLabel.textContent = completed + ' מתוך ' + total + ' משימות';
+        }
+
+        // ── 4. Motivational message ──────────────────────────────────────
+        // 0%        → "בואי נתחיל! 💪"
+        // 1–99%     → "ממשיכות! 🚀"
+        // 100%      → "כל הכבוד נעמה! 🎉"
+        var msgEl = document.getElementById('motivational-msg');
+        if (msgEl) {
+          var msg;
+          if (pct === 0) {
+            msg = 'בואי נתחיל! 💪';
+          } else if (pct === 100) {
+            msg = 'כל הכבוד נעמה! 🎉';
+          } else {
+            // 1 ≤ pct ≤ 99
+            msg = 'ממשיכות! 🚀';
+          }
+          msgEl.textContent = msg;
+        }
+
+        // ── 5. Archive list ──────────────────────────────────────────────
+        this.renderArchive();
+      },
+
+      /**
+       * Render the list of archived (completed) tasks.
+       * Each item shows: title, course badge, completedAt date.
+       * Empty state: "עדיין לא הושלמו משימות"
+       * Requirements 7.3, 8.3
+       */
+      renderArchive: function() {
+        var container = document.getElementById('archive-list');
+        if (!container) return;
+
+        var archive = TaskStore.getArchive();
+
+        if (!archive || archive.length === 0) {
+          container.innerHTML =
+            '<div class="empty-state">' +
+              '<span class="empty-icon">📭</span>' +
+              '<p class="empty-title">עדיין לא הושלמו משימות</p>' +
+              '<p class="empty-desc">סמני משימות כהושלמות בלוח הבקרה כדי לראות אותן כאן</p>' +
+            '</div>';
+          return;
+        }
+
+        // Sort: most recently completed first
+        var sorted = archive.slice().sort(function(a, b) {
+          return (b.completedAt || 0) - (a.completedAt || 0);
+        });
+
+        var html = '';
+        sorted.forEach(function(task) {
+          var courseLabel   = COURSE_LABELS[task.course] || task.course || '';
+          var completedDate = task.completedAt
+            ? formatCompletedDate(task.completedAt)
+            : '';
+
+          html +=
+            '<div class="archive-item" role="listitem" ' +
+                 'aria-label="משימה שהושלמה: ' + escHtml(task.title) + '">' +
+              '<span class="archive-icon" aria-hidden="true">✅</span>' +
+              '<div class="archive-body">' +
+                '<div class="archive-title">' + escHtml(task.title) + '</div>' +
+                '<div class="archive-meta">' +
+                  '<span class="badge badge-success" aria-label="קורס">' +
+                    escHtml(courseLabel) +
+                  '</span>' +
+                  (completedDate
+                    ? '<span class="archive-date" aria-label="הושלם בתאריך">' +
+                        '✓ ' + escHtml(completedDate) +
+                      '</span>'
+                    : '') +
+                '</div>' +
+              '</div>' +
+            '</div>';
+        });
+
+        container.innerHTML = html;
+      }
+    };
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+
+    /**
+     * Format a completedAt timestamp (ms since epoch) into a readable date/time.
+     */
+    function formatCompletedDate(ts) {
+      try {
+        var d     = new Date(ts);
+        var day   = String(d.getDate()).padStart(2, '0');
+        var month = String(d.getMonth() + 1).padStart(2, '0');
+        var year  = d.getFullYear();
+        var hours = String(d.getHours()).padStart(2, '0');
+        var mins  = String(d.getMinutes()).padStart(2, '0');
+        return day + '/' + month + '/' + year + ' בשעה ' + hours + ':' + mins;
+      } catch (e) {
+        return '';
+      }
+    }
+
+    /** Escape a string for safe HTML insertion. */
+    function escHtml(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g,  '&amp;')
+        .replace(/</g,  '&lt;')
+        .replace(/>/g,  '&gt;')
+        .replace(/"/g,  '&quot;')
+        .replace(/'/g,  '&#39;');
+    }
+
+    // ── Navigation hamburger (Requirement 9.5) ────────────────────────────
+    function toggleNav() {
+      var toggle = document.getElementById('nav-toggle');
+      var links  = document.getElementById('nav-links');
+      var isOpen = links.classList.contains('open');
+      if (isOpen) {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'פתח תפריט ניווט');
+      } else {
+        links.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'סגור תפריט ניווט');
+      }
+    }
+
+    // ── Init ───────────────────────────────────────────────────────────────
+    (function init() {
+      // Apply saved theme (dark / light)
+      applyTheme();
+
+      // Reset weekly counters if a new ISO week has started (Requirement 8.4)
+      ProgressTracker.checkWeekReset();
+
+      // Render all progress UI (Requirements 8.1–8.3, 7.2–7.3)
+      ProgressTracker.render();
+    })();
+  </script>
+
+</body>
+</html>

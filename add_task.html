@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>סדר בתואר 📚 – הוספת משימה</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── Add/Edit Task page-specific styles ── */
+    .form-page-wrapper {
+      padding: 1.5rem 1rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .form-card {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      padding: 2rem;
+      border: 1px solid var(--color-border);
+    }
+
+    .form-page-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Date + time side-by-side */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* Priority radio group */
+    .radio-group {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      padding: 0.35rem 0;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .radio-option input[type="radio"] {
+      accent-color: var(--color-primary);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* Char counter */
+    .char-counter {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: left;
+      margin-top: 0.2rem;
+      display: block;
+    }
+
+    .char-counter.near-limit {
+      color: var(--color-warning);
+      font-weight: 600;
+    }
+
+    .char-counter.at-limit {
+      color: var(--color-danger);
+      font-weight: 700;
+    }
+
+    /* Form actions row */
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1.75rem;
+      flex-wrap: wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-card {
+        padding: 1.25rem;
+      }
+
+      .form-page-title {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Skip Navigation ── -->
+  <a class="skip-nav" href="#main-content">דלג לתוכן הראשי</a>
+
+  <!-- ── Site Header ── -->
+  <header class="site-header">
+    <a href="index.html" class="logo" aria-label="סדר בתואר – דף הבית">
+      סדר בתואר 📚
+    </a>
+    <div class="header-actions">
+      <button
+        id="dark-toggle"
+        class="dark-mode-toggle"
+        aria-label="עבור למצב כהה"
+        onclick="toggleTheme()"
+        type="button"
+      >🌙</button>
+    </div>
+  </header>
+
+  <!-- ── Navigation Bar ── -->
+  <nav class="nav" aria-label="ניווט ראשי">
+    <button
+      class="nav-toggle"
+      id="nav-toggle"
+      aria-expanded="false"
+      aria-controls="nav-links"
+      aria-label="פתח תפריט ניווט"
+      type="button"
+      onclick="toggleNav()"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="nav-links" id="nav-links" role="list">
+      <li>
+        <a href="index.html" class="nav-link">לוח בקרה</a>
+      </li>
+      <li>
+        <a href="add_task.html"
+           class="nav-link active"
+           aria-current="page">הוספת משימה</a>
+      </li>
+      <li>
+        <a href="services_ai.html" class="nav-link">תכנון AI</a>
+      </li>
+      <li>
+        <a href="services_progress.html" class="nav-link">התקדמות</a>
+      </li>
+      <li>
+        <a href="about.html" class="nav-link">אודות</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ── Main Content ── -->
+  <main id="main-content">
+    <div class="form-page-wrapper">
+
+      <h1 class="form-page-title" id="page-heading">
+        <span id="page-heading-icon">➕</span>
+        <span id="page-heading-text">הוספת משימה</span>
+      </h1>
+
+      <img
+        src="images/add-task.svg"
+        class="illustration illustration-center mb-3"
+        alt="איור בסגנון גיאומטרי של טופס משימה עם שדות טקסט וכפתור פלוס עגול להוספת משימה חדשה"
+      />
+
+      <div class="form-card">
+        <form id="task-form" novalidate onsubmit="handleSubmit(event)">
+
+          <!-- Title -->
+          <div class="form-group">
+            <label for="task-title">כותרת המשימה <span aria-hidden="true" style="color:var(--color-danger)">*</span></label>
+            <input
+              type="text"
+              id="task-title"
+              name="title"
+              class="form-control"
+              placeholder="לדוגמה: מטלת תכנות ב-C#"
+              required
+              autocomplete="off"
+              aria-required="true"
+              aria-describedby="title-error"
+            />
+            <div
+              id="title-error"
+              class="form-error"
+              role="alert"
+              aria-live="assertive"
+              style="display:none;"
+            ></div>
+          </div>
+
+          <!-- Course -->
+          <div class="form-group">
+            <label for="task-course">קורס <span aria-hidden="true" style="color:var(--color-danger)">*</span></label>
+            <select
+              id="task-course"
+              name="course"
+              class="form-control"
+              required
+              aria-required="true"
+              aria-describedby="course-error"
+            >
+              <option value="">-- בחרי קורס --</option>
+              <option value="web">מדעי האינטרנט</option>
+              <option value="ds">מדעי הנתונים</option>
+              <option value="algo">אלגוריתמים</option>
+              <option value="os">מערכות הפעלה</option>
+              <option value="project">פרויקט</option>
+              <option value="other">אחר</option>
+            </select>
+            <div
+              id="course-error"
+              class="form-error"
+              role="alert"
+              aria-live="assertive"
+              style="display:none;"
+            ></div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label for="task-description">תיאור <span class="text-muted" style="font-weight:400;">(אופציונלי)</span></label>
+            <textarea
+              id="task-description"
+              name="description"
+              class="form-control"
+              placeholder="תיאור קצר של המשימה..."
+              maxlength="500"
+              rows="4"
+              aria-describedby="desc-counter"
+            ></textarea>
+            <span id="desc-counter" class="char-counter" aria-live="polite">0 / 500 תווים</span>
+          </div>
+
+          <!-- Deadline Date + Time -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="task-deadline-date">תאריך הגשה <span aria-hidden="true" style="color:var(--color-danger)">*</span></label>
+              <input
+                type="date"
+                id="task-deadline-date"
+                name="deadlineDate"
+                class="form-control"
+                required
+                aria-required="true"
+                aria-describedby="deadline-date-error"
+              />
+              <div
+                id="deadline-date-error"
+                class="form-error"
+                role="alert"
+                aria-live="assertive"
+                style="display:none;"
+              ></div>
+            </div>
+
+            <div class="form-group">
+              <label for="task-deadline-time">שעת הגשה <span aria-hidden="true" style="color:var(--color-danger)">*</span></label>
+              <input
+                type="time"
+                id="task-deadline-time"
+                name="deadlineTime"
+                class="form-control"
+                required
+                aria-required="true"
+                aria-describedby="deadline-time-error"
+              />
+              <div
+                id="deadline-time-error"
+                class="form-error"
+                role="alert"
+                aria-live="assertive"
+                style="display:none;"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Priority -->
+          <div class="form-group">
+            <fieldset style="border:none;padding:0;margin:0;">
+              <legend style="font-weight:600;font-size:0.9rem;color:var(--color-text);margin-bottom:0.4rem;">
+                עדיפות
+              </legend>
+              <div class="radio-group" role="radiogroup" aria-label="עדיפות המשימה">
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="priority"
+                    value="normal"
+                    id="priority-normal"
+                    checked
+                  />
+                  <span>רגיל</span>
+                </label>
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="priority"
+                    value="high"
+                    id="priority-high"
+                  />
+                  <span>גבוה</span>
+                </label>
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="priority"
+                    value="low"
+                    id="priority-low"
+                  />
+                  <span>נמוך</span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button
+              type="submit"
+              id="submit-btn"
+              class="btn btn-primary"
+              aria-label="שמירת המשימה"
+            >💾 שמירת משימה</button>
+
+            <a
+              href="index.html"
+              class="btn btn-outline"
+              id="cancel-btn"
+              aria-label="ביטול וחזרה ללוח הבקרה"
+            >✕ ביטול</a>
+          </div>
+
+        </form>
+      </div><!-- /.form-card -->
+
+    </div><!-- /.form-page-wrapper -->
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p>סדר בתואר 📚 &mdash; בנוי עם ❤️ עבור נעמה</p>
+  </footer>
+
+  <!-- ── Toast Container ── -->
+  <div class="toast-container" id="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- ── Shared JS ── -->
+  <script src="app.js"></script>
+
+  <!-- ── Inline Add/Edit Task Script ── -->
+  <script>
+    'use strict';
+
+    // ── State ───────────────────────────────────────────────────────────────
+    var editId = null; // non-null when editing an existing task
+
+    // ── On Load ─────────────────────────────────────────────────────────────
+    (function init() {
+      applyTheme();
+      initCharCounter();
+
+      // Check for ?edit=<id> in the URL
+      var params = new URLSearchParams(window.location.search);
+      var editParam = params.get('edit');
+
+      if (editParam) {
+        var task = TaskStore.getById(editParam);
+        if (task) {
+          editId = task.id;
+          switchToEditMode(task);
+        } else {
+          // ID not found – show warning and fall back to add mode
+          showToast('המשימה המבוקשת לא נמצאה', 'error');
+        }
+      }
+    })();
+
+    // ── Switch UI to Edit Mode ───────────────────────────────────────────────
+    function switchToEditMode(task) {
+      // Update headings & title
+      document.title = 'סדר בתואר 📚 – עריכת משימה';
+      document.getElementById('page-heading-icon').textContent = '✏️';
+      document.getElementById('page-heading-text').textContent = 'עריכת משימה';
+
+      // Update submit button
+      var submitBtn = document.getElementById('submit-btn');
+      submitBtn.textContent = '💾 עדכון משימה';
+      submitBtn.setAttribute('aria-label', 'עדכון המשימה');
+
+      // Populate form fields
+      var titleEl = document.getElementById('task-title');
+      titleEl.value = task.title || '';
+
+      var courseEl = document.getElementById('task-course');
+      courseEl.value = task.course || '';
+
+      var descEl = document.getElementById('task-description');
+      descEl.value = task.description || '';
+      updateCharCounter(descEl.value.length);
+
+      var dateEl = document.getElementById('task-deadline-date');
+      dateEl.value = task.deadlineDate || '';
+
+      var timeEl = document.getElementById('task-deadline-time');
+      timeEl.value = task.deadlineTime || '';
+
+      // Priority radio
+      var priority = task.priority || 'normal';
+      var radios = document.querySelectorAll('input[name="priority"]');
+      for (var i = 0; i < radios.length; i++) {
+        radios[i].checked = (radios[i].value === priority);
+      }
+    }
+
+    // ── Char Counter for Description ────────────────────────────────────────
+    function initCharCounter() {
+      var textarea = document.getElementById('task-description');
+      textarea.addEventListener('input', function() {
+        updateCharCounter(this.value.length);
+      });
+    }
+
+    function updateCharCounter(length) {
+      var counter = document.getElementById('desc-counter');
+      counter.textContent = length + ' / 500 תווים';
+      counter.className = 'char-counter';
+      if (length >= 500) {
+        counter.classList.add('at-limit');
+      } else if (length >= 400) {
+        counter.classList.add('near-limit');
+      }
+    }
+
+    // ── Form Submit Handler ──────────────────────────────────────────────────
+    function handleSubmit(event) {
+      event.preventDefault();
+      clearAllErrors();
+
+      // Collect form data
+      var formData = collectFormData();
+
+      // Validate
+      var result = ValidationEngine.validateTaskForm(formData);
+
+      if (!result.valid) {
+        showFieldErrors(result.errors);
+        // Focus first invalid field
+        focusFirstError(result.errors);
+        return;
+      }
+
+      // Save or update
+      if (editId) {
+        var updated = TaskStore.update(editId, formData);
+        if (updated) {
+          showToast('המשימה עודכנה בהצלחה ✏️', 'success');
+        } else {
+          showToast('שגיאה בעדכון המשימה', 'error');
+          return;
+        }
+      } else {
+        var added = TaskStore.add(formData);
+        if (added) {
+          showToast('המשימה נשמרה בהצלחה 🎉', 'success');
+        } else {
+          showToast('שגיאה בשמירת המשימה', 'error');
+          return;
+        }
+      }
+
+      // Redirect to dashboard after 1 second
+      setTimeout(function() {
+        window.location.href = 'index.html';
+      }, 1000);
+    }
+
+    // ── Collect Form Data ────────────────────────────────────────────────────
+    function collectFormData() {
+      var priorityRadios = document.querySelectorAll('input[name="priority"]');
+      var selectedPriority = 'normal';
+      for (var i = 0; i < priorityRadios.length; i++) {
+        if (priorityRadios[i].checked) {
+          selectedPriority = priorityRadios[i].value;
+          break;
+        }
+      }
+
+      return {
+        title:        document.getElementById('task-title').value.trim(),
+        course:       document.getElementById('task-course').value,
+        description:  document.getElementById('task-description').value.trim(),
+        deadlineDate: document.getElementById('task-deadline-date').value,
+        deadlineTime: document.getElementById('task-deadline-time').value,
+        priority:     selectedPriority
+      };
+    }
+
+    // ── Show Per-Field Errors ────────────────────────────────────────────────
+    function showFieldErrors(errors) {
+      var fieldMap = {
+        title:        { inputId: 'task-title',         errorId: 'title-error'         },
+        course:       { inputId: 'task-course',         errorId: 'course-error'        },
+        deadlineDate: { inputId: 'task-deadline-date',  errorId: 'deadline-date-error' },
+        deadlineTime: { inputId: 'task-deadline-time',  errorId: 'deadline-time-error' }
+      };
+
+      Object.keys(errors).forEach(function(field) {
+        var mapping = fieldMap[field];
+        if (!mapping) return;
+
+        var inputEl = document.getElementById(mapping.inputId);
+        var errorEl = document.getElementById(mapping.errorId);
+
+        if (inputEl) {
+          inputEl.setAttribute('aria-invalid', 'true');
+          inputEl.classList.add('field-error');
+        }
+        if (errorEl) {
+          errorEl.textContent = errors[field];
+          errorEl.style.display = 'flex';
+        }
+      });
+    }
+
+    // ── Clear All Errors ─────────────────────────────────────────────────────
+    function clearAllErrors() {
+      var inputs = document.querySelectorAll('.form-control');
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].removeAttribute('aria-invalid');
+        inputs[i].classList.remove('field-error');
+      }
+
+      var errorDivs = document.querySelectorAll('.form-error');
+      for (var j = 0; j < errorDivs.length; j++) {
+        errorDivs[j].textContent = '';
+        errorDivs[j].style.display = 'none';
+      }
+    }
+
+    // ── Focus First Errored Field ────────────────────────────────────────────
+    function focusFirstError(errors) {
+      var priority = ['title', 'course', 'deadlineDate', 'deadlineTime'];
+      var inputIds = {
+        title:        'task-title',
+        course:       'task-course',
+        deadlineDate: 'task-deadline-date',
+        deadlineTime: 'task-deadline-time'
+      };
+
+      for (var i = 0; i < priority.length; i++) {
+        if (errors[priority[i]]) {
+          var el = document.getElementById(inputIds[priority[i]]);
+          if (el) {
+            el.focus();
+            break;
+          }
+        }
+      }
+    }
+
+    // ── Navigation Hamburger ─────────────────────────────────────────────────
+    function toggleNav() {
+      var toggle = document.getElementById('nav-toggle');
+      var links  = document.getElementById('nav-links');
+      var isOpen = links.classList.contains('open');
+      if (isOpen) {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'פתח תפריט ניווט');
+      } else {
+        links.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'סגור תפריט ניווט');
+      }
+    }
+
+    // ── Toast Notification ───────────────────────────────────────────────────
+    function showToast(message, type) {
+      var container = document.getElementById('toast-container');
+      var toast = document.createElement('div');
+      toast.className = 'toast toast-' + (type || 'info');
+      toast.textContent = message;
+      toast.setAttribute('role', 'status');
+      container.appendChild(toast);
+      setTimeout(function() {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 3100);
+    }
+  </script>
+
+</body>
+</html>

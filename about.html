@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>סדר בתואר 📚 – אודות</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Skip Navigation ── -->
+  <a class="skip-nav" href="#main-content">דלג לתוכן הראשי</a>
+
+  <!-- ── Site Header ── -->
+  <header class="site-header">
+    <a href="index.html" class="logo" aria-label="סדר בתואר – דף הבית">
+      סדר בתואר 📚
+    </a>
+    <div class="header-actions">
+      <button
+        id="dark-toggle"
+        class="dark-mode-toggle"
+        aria-label="עבור למצב כהה"
+        onclick="toggleTheme()"
+        type="button"
+      >🌙</button>
+    </div>
+  </header>
+
+  <!-- ── Navigation Bar ── -->
+  <nav class="nav" aria-label="ניווט ראשי">
+    <button
+      class="nav-toggle"
+      id="nav-toggle"
+      aria-expanded="false"
+      aria-controls="nav-links"
+      aria-label="פתח תפריט ניווט"
+      type="button"
+      onclick="toggleNav()"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="nav-links" id="nav-links" role="list">
+      <li>
+        <a href="index.html"
+           class="nav-link">לוח בקרה</a>
+      </li>
+      <li>
+        <a href="add_task.html"
+           class="nav-link">הוספת משימה</a>
+      </li>
+      <li>
+        <a href="services_ai.html"
+           class="nav-link">תכנון AI</a>
+      </li>
+      <li>
+        <a href="services_progress.html"
+           class="nav-link">התקדמות</a>
+      </li>
+      <li>
+        <a href="about.html"
+           class="nav-link active"
+           aria-current="page">אודות</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ── Main Content ── -->
+  <main id="main-content">
+    <div class="page-content">
+
+      <!-- Page Heading -->
+      <h1 class="section-title" style="font-size: 1.8rem; margin-bottom: 1.5rem;">
+        אודות 💡
+      </h1>
+
+      <!-- Project Description -->
+      <section class="card mb-3" aria-labelledby="about-desc-heading">
+        <img
+          src="images/about-illustration.svg"
+          class="illustration illustration-center mb-2"
+          alt="איור בסגנון גיאומטרי של כובע סיום תואר מעל ערימת ספרים, המסמל ארגון זמן הלמידה של הסטודנט"
+        />
+        <h2 class="card-title mb-2" id="about-desc-heading" style="font-size: 1.2rem; color: var(--color-primary);">
+          מה זה סדר בתואר?
+        </h2>
+        <div class="card-body" style="font-size: 1rem; line-height: 1.8; color: var(--color-text);">
+          <p>
+            <strong>סדר בתואר</strong> הוא כלי ניהול משימות חינמי שנבנה במיוחד עבור סטודנטים
+            למדעי המחשב. הוא עוזר לכם לעקוב אחר מטלות, פרויקטים ודדליינים
+            לאורך כל הסמסטר – בצורה פשוטה, מהירה ונוחה.
+          </p>
+          <p class="mt-2">
+            הכלי מאפשר להוסיף משימות, לתכנן את השבוע בעזרת AI, לעקוב אחר
+            ההתקדמות ולנהל את זמן הלמידה בצורה חכמה. כל הנתונים נשמרים
+            ישירות בדפדפן שלכם – ללא צורך בחשבון או בשרת.
+          </p>
+        </div>
+      </section>
+
+      <!-- Features List -->
+      <section class="card mb-3" aria-labelledby="features-heading">
+        <h2 class="card-title mb-2" id="features-heading" style="font-size: 1.2rem; color: var(--color-primary);">
+          תכונות עיקריות
+        </h2>
+        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.85rem;">
+          <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem;">
+            <span style="font-size: 1.4rem;" aria-hidden="true">📋</span>
+            <div>
+              <strong>ניהול משימות</strong>
+              <p style="margin: 0; font-size: 0.88rem; color: var(--color-text-muted);">
+                הוספה, עריכה ומחיקה של משימות עם שדות קורס, עדיפות ודדליין
+              </p>
+            </div>
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem;">
+            <span style="font-size: 1.4rem;" aria-hidden="true">🤖</span>
+            <div>
+              <strong>תכנון AI</strong>
+              <p style="margin: 0; font-size: 0.88rem; color: var(--color-text-muted);">
+                פיזור אוטומטי של המשימות לאורך ימי השבוע לפי העדפות הלמידה שלכם
+              </p>
+            </div>
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem;">
+            <span style="font-size: 1.4rem;" aria-hidden="true">📅</span>
+            <div>
+              <strong>לוח שנה שבועי</strong>
+              <p style="margin: 0; font-size: 0.88rem; color: var(--color-text-muted);">
+                תצוגה שבועית אינטראקטיבית של המשימות המחולקות לפי ימים
+              </p>
+            </div>
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem;">
+            <span style="font-size: 1.4rem;" aria-hidden="true">📊</span>
+            <div>
+              <strong>מעקב התקדמות</strong>
+              <p style="margin: 0; font-size: 0.88rem; color: var(--color-text-muted);">
+                סטטיסטיקות שבועיות, ארכיון משימות שהושלמו ומוטיבציה לאורך הדרך
+              </p>
+            </div>
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem;">
+            <span style="font-size: 1.4rem;" aria-hidden="true">🌙</span>
+            <div>
+              <strong>מצב כהה</strong>
+              <p style="margin: 0; font-size: 0.88rem; color: var(--color-text-muted);">
+                ממשק בהיר וכהה לפי העדפה, נשמר אוטומטית בין הביקורים
+              </p>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Tech Stack -->
+      <section class="card mb-3" aria-labelledby="tech-heading">
+        <h2 class="card-title mb-2" id="tech-heading" style="font-size: 1.2rem; color: var(--color-primary);">
+          טכנולוגיות
+        </h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+          <span class="badge badge-primary" style="font-size: 0.9rem; padding: 0.35rem 0.9rem;">HTML5</span>
+          <span class="badge badge-info"    style="font-size: 0.9rem; padding: 0.35rem 0.9rem;">CSS3</span>
+          <span class="badge badge-warning" style="font-size: 0.9rem; padding: 0.35rem 0.9rem;">JavaScript ES6</span>
+          <span class="badge badge-success" style="font-size: 0.9rem; padding: 0.35rem 0.9rem;">localStorage</span>
+        </div>
+        <p class="mt-2" style="font-size: 0.9rem; color: var(--color-text-muted);">
+          אפליקציה סטטית לחלוטין – ללא ספריות חיצוניות, ללא שרת, ללא צורך בהתקנה.
+          כל הקוד רץ ישירות בדפדפן.
+        </p>
+      </section>
+
+      <!-- Closing line -->
+      <div class="card" style="text-align: center; padding: 1.75rem;">
+        <p style="font-size: 1.1rem; color: var(--color-text); font-weight: 600;">
+          בנוי עם ❤️ עבור נעמה
+        </p>
+      </div>
+
+    </div><!-- /.page-content -->
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p>סדר בתואר 📚 &mdash; בנוי עם ❤️ עבור נעמה</p>
+  </footer>
+
+  <!-- ── Shared JS ── -->
+  <script src="app.js"></script>
+
+  <!-- ── Inline Page Script ── -->
+  <script>
+    'use strict';
+
+    // Apply saved theme on load
+    applyTheme();
+
+    // ── Navigation Hamburger ──
+    function toggleNav() {
+      var toggle = document.getElementById('nav-toggle');
+      var links  = document.getElementById('nav-links');
+      var isOpen = links.classList.contains('open');
+      if (isOpen) {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'פתח תפריט ניווט');
+      } else {
+        links.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'סגור תפריט ניווט');
+      }
+    }
+  </script>
+
+</body>
+</html>
