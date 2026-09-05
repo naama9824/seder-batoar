@@ -1161,6 +1161,36 @@ textarea.form-control {
 
 .hidden { display: none !important; }
 
+/* ── Illustrations / Images ── */
+.illustration {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 420px;
+  border-radius: var(--radius-card);
+}
+
+.illustration-sm {
+  max-width: 140px;
+}
+
+.banner-illustration {
+  width: 160px;
+  max-width: 40%;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.illustration-center {
+  margin-inline: auto;
+}
+
+@media (max-width: 768px) {
+  .banner-illustration {
+    display: none; /* keep welcome banner compact on small screens */
+  }
+}
+
 /* Divider */
 .divider {
   border: none;
