@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 220" role="img" aria-label="איור סטודנטית מארגנת את הזמן שלה עם ספרים ולוח שנה" fill="none">
+  <defs>
+    <linearGradient id="ab1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9B8FD4"/>
+      <stop offset="1" stop-color="#7EC8E3"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="220" rx="16" fill="#F5F4FB"/>
+  <circle cx="70" cy="60" r="40" fill="#9B8FD4" opacity="0.16"/>
+  <rect x="300" y="140" width="70" height="70" rx="16" fill="#7EC8E3" opacity="0.18"/>
+  <!-- graduation cap -->
+  <path d="M200 55l70 26-70 26-70-26z" fill="url(#ab1)"/>
+  <path d="M200 107l40-15v22c0 12-18 20-40 20s-40-8-40-20V92z" fill="#9B8FD4" opacity="0.55"/>
+  <line x1="270" y1="81" x2="270" y2="120" stroke="#7EC8E3" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="270" cy="124" r="5" fill="#7EC8E3"/>
+  <!-- stacked books -->
+  <rect x="150" y="160" width="100" height="16" rx="5" fill="#9B8FD4"/>
+  <rect x="160" y="144" width="90"  height="16" rx="5" fill="#7EC8E3"/>
+  <rect x="145" y="176" width="110" height="16" rx="5" fill="#b9b0e8"/>
+</svg>

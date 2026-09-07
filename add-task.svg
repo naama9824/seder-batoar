@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 220" role="img" aria-label="איור הוספת משימה חדשה עם טופס וכפתור פלוס" fill="none">
+  <defs>
+    <linearGradient id="at1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9B8FD4"/>
+      <stop offset="1" stop-color="#7EC8E3"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="220" rx="16" fill="#F5F4FB"/>
+  <rect x="34" y="40" width="60" height="60" rx="14" fill="#7EC8E3" opacity="0.18"/>
+  <circle cx="350" cy="170" r="38" fill="#9B8FD4" opacity="0.16"/>
+  <!-- form card -->
+  <rect x="110" y="40" width="180" height="140" rx="14" fill="#FFFFFF" stroke="#ddd8f5" stroke-width="2"/>
+  <rect x="130" y="60" width="80" height="10" rx="5" fill="url(#at1)"/>
+  <rect x="130" y="88"  width="140" height="14" rx="7" fill="#f0edfb" stroke="#e6e2f7" stroke-width="1.5"/>
+  <rect x="130" y="112" width="140" height="14" rx="7" fill="#f0edfb" stroke="#e6e2f7" stroke-width="1.5"/>
+  <rect x="130" y="136" width="90"  height="14" rx="7" fill="#f0edfb" stroke="#e6e2f7" stroke-width="1.5"/>
+  <!-- floating plus button -->
+  <circle cx="290" cy="160" r="26" fill="url(#at1)"/>
+  <path d="M290 148v24M278 160h24" stroke="#FFFFFF" stroke-width="3.6" stroke-linecap="round"/>
+</svg>
