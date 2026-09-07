@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>סדר בתואר 📚 – לוח המשימות</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Skip Navigation ── -->
+  <a class="skip-nav" href="#main-content">דלג לתוכן הראשי</a>
+
+  <!-- ── Site Header ── -->
+  <header class="site-header">
+    <a href="index.html" class="logo" aria-label="סדר בתואר – דף הבית">
+      סדר בתואר 📚
+    </a>
+    <div class="header-actions">
+      <button
+        id="dark-toggle"
+        class="dark-mode-toggle"
+        aria-label="עבור למצב כהה"
+        onclick="toggleTheme()"
+        type="button"
+      >🌙</button>
+    </div>
+  </header>
+
+  <!-- ── Navigation Bar ── -->
+  <nav class="nav" aria-label="ניווט ראשי">
+    <button
+      class="nav-toggle"
+      id="nav-toggle"
+      aria-expanded="false"
+      aria-controls="nav-links"
+      aria-label="פתח תפריט ניווט"
+      type="button"
+      onclick="toggleNav()"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="nav-links" id="nav-links" role="list">
+      <li>
+        <a href="index.html"
+           class="nav-link active"
+           aria-current="page">לוח בקרה</a>
+      </li>
+      <li>
+        <a href="add_task.html"
+           class="nav-link">הוספת משימה</a>
+      </li>
+      <li>
+        <a href="services_ai.html"
+           class="nav-link">תכנון AI</a>
+      </li>
+      <li>
+        <a href="services_progress.html"
+           class="nav-link">התקדמות</a>
+      </li>
+      <li>
+        <a href="about.html"
+           class="nav-link">אודות</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ── Main Content ── -->
+  <main id="main-content">
+    <div class="dashboard-layout">
+
+      <!-- ────────────────── Main Column ────────────────── -->
+      <div class="dashboard-main">
+
+        <!-- Welcome Banner -->
+        <section class="card welcome-banner mb-3" aria-label="ברוכה הבאה">
+          <div class="flex-between flex-wrap gap-2">
+            <div>
+              <h1 style="font-size:1.5rem;">
+                שלום נעמה! 👋
+              </h1>
+              <a href="add_task.html" class="btn btn-primary mt-2" aria-label="הוסיפי משימה חדשה">
+                ➕ משימה חדשה
+              </a>
+            </div>
+            <img
+              src="images/hero-dashboard.svg"
+              class="banner-illustration"
+              alt="איור בסגנון גיאומטרי המציג לוח משימות עם רשימת מטלות ותיבות סימון מסומנות"
+            />
+          </div>
+        </section>
+
+        <!-- Open Tasks Section -->
+        <section class="mb-3" aria-labelledby="open-tasks-heading">
+          <h2 class="section-title" id="open-tasks-heading">📋 משימות פתוחות</h2>
+          <div id="tasks-list" role="list" aria-live="polite" aria-label="רשימת משימות פתוחות">
+            <!-- Rendered by renderTasks() -->
+          </div>
+        </section>
+
+        <!-- Upcoming Deadlines Section -->
+        <section class="upcoming-section mb-3" aria-labelledby="upcoming-heading">
+          <h2 class="section-title" id="upcoming-heading">⏰ דדליינים קרובים – 7 ימים הקרובים</h2>
+          <div id="upcoming-list" class="upcoming-list" role="list" aria-live="polite" aria-label="דדליינים קרובים">
+            <!-- Rendered by renderUpcoming() -->
+          </div>
+        </section>
+
+      </div><!-- /.dashboard-main -->
+
+      <!-- ────────────────── Sidebar ────────────────── -->
+      <aside class="dashboard-sidebar" aria-label="כלים נוספים">
+
+        <!-- Pomodoro Timer Widget -->
+        <div class="pomodoro-widget" role="region" aria-label="טיימר פומודורו">
+          <h3>🍅 טיימר פומודורו</h3>
+
+          <div
+            class="pomodoro-timer"
+            id="pomodoro-display"
+            role="timer"
+            aria-live="off"
+            aria-label="זמן נותר"
+          >25:00</div>
+
+          <div class="pomodoro-mode" id="pomodoro-mode-label">עבודה</div>
+
+          <div class="pomodoro-progress" aria-hidden="true">
+            <div class="pomodoro-progress-fill" id="pomodoro-progress-fill" style="width:100%"></div>
+          </div>
+
+          <div class="pomodoro-controls">
+            <button
+              id="pomodoro-start-pause"
+              class="btn btn-primary btn-sm"
+              onclick="pomodoroStartPause()"
+              aria-label="התחל טיימר"
+              type="button"
+            >▶ התחל</button>
+
+            <button
+              class="btn btn-outline btn-sm"
+              onclick="pomodoroReset()"
+              aria-label="אפס טיימר"
+              type="button"
+            >↺ אפס</button>
+
+            <button
+              class="btn btn-secondary btn-sm"
+              onclick="pomodoroSwitch()"
+              aria-label="עבור למצב אחר"
+              type="button"
+            >⇄ שנה מצב</button>
+          </div>
+        </div><!-- /.pomodoro-widget -->
+
+      </aside><!-- /.dashboard-sidebar -->
+
+    </div><!-- /.dashboard-layout -->
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p>סדר בתואר 📚 &mdash; בנוי עם ❤️ עבור נעמה</p>
+  </footer>
+
+  <!-- ── Delete Confirmation Dialog ── -->
+  <div
+    id="delete-dialog"
+    class="dialog-overlay hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="delete-dialog-title"
+    aria-describedby="delete-dialog-desc"
+  >
+    <div class="dialog-box">
+      <button
+        class="dialog-close"
+        onclick="closeDeleteDialog()"
+        aria-label="סגור חלון"
+        type="button"
+      >×</button>
+      <h2 class="dialog-title" id="delete-dialog-title">מחיקת משימה</h2>
+      <p id="delete-dialog-desc">האם אתה בטוח שברצונך למחוק את המשימה? פעולה זו אינה ניתנת לביטול.</p>
+      <div class="dialog-actions">
+        <button
+          id="delete-confirm-btn"
+          class="btn btn-danger"
+          onclick="confirmDelete()"
+          type="button"
+        >🗑 מחק</button>
+        <button
+          class="btn btn-outline"
+          onclick="closeDeleteDialog()"
+          type="button"
+        >ביטול</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toast Container ── -->
+  <div class="toast-container" id="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- ── Shared JS ── -->
+  <script src="app.js"></script>
+
+  <!-- ── Inline Dashboard Script ── -->
+  <script>
+    'use strict';
+
+    // ── Course labels map ──────────────────────────────────────────────────
+    var COURSE_LABELS = {
+      web:     'מדעי האינטרנט',
+      ds:      'מדעי הנתונים',
+      algo:    'אלגוריתמים',
+      os:      'מערכות הפעלה',
+      project: 'פרויקט',
+      other:   'אחר'
+    };
+
+    var PRIORITY_LABELS = {
+      high:   { label: 'עדיפות גבוהה', cls: 'badge-danger' },
+      normal: { label: 'עדיפות רגילה', cls: 'badge-info'  },
+      low:    { label: 'עדיפות נמוכה', cls: 'badge-success'}
+    };
+
+    // ── Pending delete ID ──────────────────────────────────────────────────
+    var pendingDeleteId = null;
+
+    // ── Pomodoro state ─────────────────────────────────────────────────────
+    var WORK_DURATION  = 25 * 60; // 25 min in seconds
+    var BREAK_DURATION =  5 * 60; //  5 min in seconds
+    var pomodoroMode      = 'work';  // 'work' | 'break'
+    var pomodoroRemaining = WORK_DURATION;
+    var pomodoroTotal     = WORK_DURATION;
+    var pomodoroRunning   = false;
+    var pomodoroInterval  = null;
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  INIT
+    // ─────────────────────────────────────────────────────────────────────
+    (function init() {
+      seedSampleTasks();
+      applyTheme();
+      renderTasks();
+      renderUpcoming();
+
+      // Close dialog on overlay click
+      var overlay = document.getElementById('delete-dialog');
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeDeleteDialog();
+      });
+
+      // Close dialog on Escape
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeDeleteDialog();
+      });
+    })();
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  RENDER TASKS
+    // ─────────────────────────────────────────────────────────────────────
+    function renderTasks() {
+      var container = document.getElementById('tasks-list');
+      var tasks = TaskStore.getAll();
+
+      if (tasks.length === 0) {
+        container.innerHTML =
+          '<div class="empty-state">' +
+            '<span class="empty-icon">🎉</span>' +
+            '<p class="empty-title">אין משימות פתוחות כרגע 🎉</p>' +
+            '<p class="empty-desc">לחצי על "משימה חדשה" כדי להתחיל</p>' +
+          '</div>';
+        return;
+      }
+
+      var html = '';
+      tasks.forEach(function(task) {
+        var isUrgent   = task.deadlineTs && (task.deadlineTs - Date.now()) < 86400000 && task.deadlineTs > Date.now();
+        var isThisWeek = task.deadlineTs && (task.deadlineTs - Date.now()) < 7 * 86400000 && task.deadlineTs > Date.now();
+        var isExpired  = task.deadlineTs && task.deadlineTs < Date.now();
+
+        var cardClass = 'card task-card mb-2';
+        if (isUrgent || isExpired) cardClass += ' urgent';
+        else if (isThisWeek) cardClass += ' this-week';
+
+        var courseLabel   = COURSE_LABELS[task.course]  || task.course  || '';
+        var priorityInfo  = PRIORITY_LABELS[task.priority] || PRIORITY_LABELS['normal'];
+        var deadlineLabel = (typeof formatDeadline === 'function')
+          ? formatDeadline(task.deadlineDate, task.deadlineTime)
+          : (task.deadlineDate || '');
+        var relativeLabel = (typeof formatRelativeTime === 'function' && task.deadlineTs)
+          ? formatRelativeTime(task.deadlineTs)
+          : '';
+
+        var urgentBadge = (isUrgent || isExpired)
+          ? '<span class="badge badge-danger" aria-label="דחוף">' + (isExpired ? 'פג תוקף' : 'דחוף!') + '</span>'
+          : '';
+
+        html +=
+          '<article class="' + cardClass + '" role="listitem" aria-label="משימה: ' + escHtml(task.title) + '">' +
+            '<div class="card-header">' +
+              '<h3 class="card-title">' + escHtml(task.title) + '</h3>' +
+              '<div class="flex" style="gap:0.4rem;flex-wrap:wrap;justify-content:flex-end;">' +
+                '<span class="badge badge-primary" aria-label="קורס">' + escHtml(courseLabel) + '</span>' +
+                '<span class="badge ' + priorityInfo.cls + '" aria-label="עדיפות">' + escHtml(priorityInfo.label) + '</span>' +
+                urgentBadge +
+              '</div>' +
+            '</div>' +
+            '<div class="card-body">' +
+              (task.description ? '<p>' + escHtml(task.description) + '</p>' : '') +
+              '<p style="margin-top:0.4rem;">' +
+                '<span aria-label="תאריך הגשה">📅 ' + escHtml(deadlineLabel) + '</span>' +
+                (relativeLabel ? ' <span class="text-muted" style="font-size:0.82rem;">(' + escHtml(relativeLabel) + ')</span>' : '') +
+              '</p>' +
+            '</div>' +
+            '<div class="card-footer">' +
+              '<div class="flex" style="gap:0.5rem;flex-wrap:wrap;">' +
+                '<a href="add_task.html?edit=' + encodeURIComponent(task.id) + '" ' +
+                   'class="btn btn-outline btn-sm" ' +
+                   'aria-label="ערכי משימה: ' + escHtml(task.title) + '">✏️ ערוך</a>' +
+                '<button type="button" ' +
+                        'class="btn btn-danger btn-sm" ' +
+                        'onclick="deleteTask(\'' + escAttr(task.id) + '\')" ' +
+                        'aria-label="מחקי משימה: ' + escHtml(task.title) + '">🗑 מחק</button>' +
+                '<button type="button" ' +
+                        'class="btn btn-success btn-sm" ' +
+                        'onclick="completeTask(\'' + escAttr(task.id) + '\')" ' +
+                        'aria-label="סמני כהושלמה: ' + escHtml(task.title) + '">✓ הושלם</button>' +
+              '</div>' +
+            '</div>' +
+          '</article>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  RENDER UPCOMING DEADLINES
+    // ─────────────────────────────────────────────────────────────────────
+    function renderUpcoming() {
+      var container = document.getElementById('upcoming-list');
+      var tasks = TaskStore.getUpcoming(7);
+
+      if (tasks.length === 0) {
+        container.innerHTML =
+          '<div class="empty-state">' +
+            '<span class="empty-icon">📅</span>' +
+            '<p class="empty-title">אין דדליינים קרובים בשבוע הקרוב</p>' +
+          '</div>';
+        return;
+      }
+
+      var html = '';
+      tasks.forEach(function(task) {
+        var isUrgent     = (task.deadlineTs - Date.now()) < 86400000;
+        var itemClass    = 'upcoming-item' + (isUrgent ? ' urgent' : '');
+        var deadlineLabel = (typeof formatDeadline === 'function')
+          ? formatDeadline(task.deadlineDate, task.deadlineTime)
+          : (task.deadlineDate || '');
+        var relativeLabel = (typeof formatRelativeTime === 'function' && task.deadlineTs)
+          ? formatRelativeTime(task.deadlineTs)
+          : '';
+        var courseLabel = COURSE_LABELS[task.course] || task.course || '';
+
+        html +=
+          '<div class="' + itemClass + '" role="listitem" ' +
+               'aria-label="' + escHtml(task.title) + (isUrgent ? ' – דחוף' : '') + '">' +
+            '<div class="deadline-info">' +
+              '<div class="deadline-title">' + escHtml(task.title) + '</div>' +
+              '<div class="deadline-date">' +
+                escHtml(deadlineLabel) +
+                (relativeLabel ? ' &mdash; <strong>' + escHtml(relativeLabel) + '</strong>' : '') +
+              '</div>' +
+            '</div>' +
+            '<div class="flex" style="gap:0.4rem;flex-wrap:wrap;justify-content:flex-end;">' +
+              '<span class="badge badge-primary">' + escHtml(courseLabel) + '</span>' +
+              (isUrgent
+                ? '<span class="badge badge-danger" aria-label="דחוף">⚠️ דחוף</span>'
+                : '') +
+            '</div>' +
+          '</div>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  DELETE TASK
+    // ─────────────────────────────────────────────────────────────────────
+    function deleteTask(id) {
+      pendingDeleteId = id;
+      var dialog = document.getElementById('delete-dialog');
+      dialog.classList.remove('hidden');
+      // Move focus to confirm button for accessibility
+      setTimeout(function() {
+        var btn = document.getElementById('delete-confirm-btn');
+        if (btn) btn.focus();
+      }, 50);
+    }
+
+    function confirmDelete() {
+      if (!pendingDeleteId) return;
+      var success = TaskStore.delete(pendingDeleteId);
+      closeDeleteDialog();
+      if (success) {
+        showToast('המשימה נמחקה בהצלחה', 'success');
+        renderTasks();
+        renderUpcoming();
+      } else {
+        showToast('שגיאה במחיקת המשימה', 'error');
+      }
+    }
+
+    function closeDeleteDialog() {
+      var dialog = document.getElementById('delete-dialog');
+      dialog.classList.add('hidden');
+      pendingDeleteId = null;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  COMPLETE TASK
+    // ─────────────────────────────────────────────────────────────────────
+    function completeTask(id) {
+      var success = TaskStore.complete(id);
+      if (success) {
+        showToast('כל הכבוד! המשימה הושלמה 🎉', 'success');
+        renderTasks();
+        renderUpcoming();
+      } else {
+        showToast('שגיאה בסימון המשימה כהושלמה', 'error');
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  POMODORO TIMER
+    // ─────────────────────────────────────────────────────────────────────
+    function updatePomodoroDisplay() {
+      var mins = Math.floor(pomodoroRemaining / 60);
+      var secs = pomodoroRemaining % 60;
+      var display = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+      document.getElementById('pomodoro-display').textContent = display;
+
+      // Progress fill
+      var pct = (pomodoroTotal > 0) ? (pomodoroRemaining / pomodoroTotal) * 100 : 0;
+      document.getElementById('pomodoro-progress-fill').style.width = pct + '%';
+
+      // Mode label
+      document.getElementById('pomodoro-mode-label').textContent =
+        pomodoroMode === 'work' ? 'עבודה' : 'הפסקה';
+
+      // Page title indicator
+      document.title = (pomodoroRunning ? '⏱ ' : '') + display +
+        ' | סדר בתואר 📚';
+    }
+
+    function pomodoroStartPause() {
+      var btn = document.getElementById('pomodoro-start-pause');
+      if (pomodoroRunning) {
+        // Pause
+        clearInterval(pomodoroInterval);
+        pomodoroInterval = null;
+        pomodoroRunning = false;
+        btn.textContent = '▶ המשך';
+        btn.setAttribute('aria-label', 'המשך טיימר');
+      } else {
+        // Start / Resume
+        pomodoroRunning = true;
+        btn.textContent = '⏸ השהה';
+        btn.setAttribute('aria-label', 'השהה טיימר');
+        pomodoroInterval = setInterval(function() {
+          pomodoroRemaining--;
+          updatePomodoroDisplay();
+          if (pomodoroRemaining <= 0) {
+            clearInterval(pomodoroInterval);
+            pomodoroInterval = null;
+            pomodoroRunning = false;
+            // Auto-switch mode
+            if (pomodoroMode === 'work') {
+              pomodoroMode      = 'break';
+              pomodoroRemaining = BREAK_DURATION;
+              pomodoroTotal     = BREAK_DURATION;
+              showToast('זמן עבודה הסתיים! קחי הפסקה של 5 דקות ☕', 'info');
+            } else {
+              pomodoroMode      = 'work';
+              pomodoroRemaining = WORK_DURATION;
+              pomodoroTotal     = WORK_DURATION;
+              showToast('הפסקה הסתיימה! חזרה לעבודה 💪', 'info');
+            }
+            btn.textContent = '▶ התחל';
+            btn.setAttribute('aria-label', 'התחל טיימר');
+            updatePomodoroDisplay();
+          }
+        }, 1000);
+      }
+      updatePomodoroDisplay();
+    }
+
+    function pomodoroReset() {
+      clearInterval(pomodoroInterval);
+      pomodoroInterval = null;
+      pomodoroRunning  = false;
+      pomodoroRemaining = (pomodoroMode === 'work') ? WORK_DURATION : BREAK_DURATION;
+      pomodoroTotal     = pomodoroRemaining;
+      var btn = document.getElementById('pomodoro-start-pause');
+      btn.textContent = '▶ התחל';
+      btn.setAttribute('aria-label', 'התחל טיימר');
+      updatePomodoroDisplay();
+    }
+
+    function pomodoroSwitch() {
+      clearInterval(pomodoroInterval);
+      pomodoroInterval = null;
+      pomodoroRunning  = false;
+      pomodoroMode      = (pomodoroMode === 'work') ? 'break' : 'work';
+      pomodoroRemaining = (pomodoroMode === 'work') ? WORK_DURATION : BREAK_DURATION;
+      pomodoroTotal     = pomodoroRemaining;
+      var btn = document.getElementById('pomodoro-start-pause');
+      btn.textContent = '▶ התחל';
+      btn.setAttribute('aria-label', 'התחל טיימר');
+      updatePomodoroDisplay();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  NAVIGATION HAMBURGER
+    // ─────────────────────────────────────────────────────────────────────
+    function toggleNav() {
+      var toggle = document.getElementById('nav-toggle');
+      var links  = document.getElementById('nav-links');
+      var isOpen = links.classList.contains('open');
+      if (isOpen) {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'פתח תפריט ניווט');
+      } else {
+        links.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'סגור תפריט ניווט');
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  TOAST NOTIFICATION
+    // ─────────────────────────────────────────────────────────────────────
+    function showToast(message, type) {
+      var container = document.getElementById('toast-container');
+      var toast = document.createElement('div');
+      toast.className = 'toast toast-' + (type || 'info');
+      toast.textContent = message;
+      toast.setAttribute('role', 'status');
+      container.appendChild(toast);
+      setTimeout(function() {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+        // Restore page title
+        document.title = 'סדר בתואר 📚 – לוח המשימות';
+      }, 3100);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  HTML ESCAPE HELPERS
+    // ─────────────────────────────────────────────────────────────────────
+    function escHtml(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g,  '&amp;')
+        .replace(/</g,  '&lt;')
+        .replace(/>/g,  '&gt;')
+        .replace(/"/g,  '&quot;')
+        .replace(/'/g,  '&#39;');
+    }
+
+    function escAttr(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g,  "\\'");
+    }
+
+    // Initial Pomodoro display
+    updatePomodoroDisplay();
+  </script>
+
+</body>
+</html>
